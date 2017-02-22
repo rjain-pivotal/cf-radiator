@@ -1,0 +1,12 @@
+//- globalError.jade
+extends ../_templates/baseTemplate.jade
+
+block bodyContent
+    p
+        div.alert.alert-danger(role="alert") Internal Error.
+    p
+        pre !{pageData.error}
+    p
+        span Please, try to 
+        a(href="#{pageData.back.path}") #{pageData.back.text} 
+        span again.

@@ -1,0 +1,9 @@
+---
+applications:
+- name: rjain-cf-node-dash 
+  memory: 512MB
+  disk_quota: 512MB
+  instances: 1
+  command: node ./index.js
+  host: rjain-cf-node-dash
+  path: .  
