@@ -33,7 +33,6 @@ module.exports = function (express) {
         console.log("GET /apps/:guid");
         var username = "";
         var summary;
-        var returnResult = {};
         var back = {
             path:"/home/",
             text:"Home"
@@ -47,10 +46,9 @@ module.exports = function (express) {
                 var app_guid = req.params.guid;
                 console.log("app_guid: " + app_guid);
                 return AppServices.view(app_guid).then(function (result) {
-                    returnResult.summary = result;
+                    summary = result;
                     var myUrl;
                     myUrl = AppServices.open(app_guid).then(function (result) {
-                        returnResult.url = result;
                         return result;
                     }).catch(function (reason) {
                         console.log (reason);
@@ -58,18 +56,17 @@ module.exports = function (express) {
                     });
                     return myUrl;
                 }).then(function (result) {
-                     var url = result;
-                     rp(url+"/health").then(function (result){
-                       console.log("The fetch result " + result);
-                       returnResult.health = result;
-                       return result;
-                     }).catch (function (reason) {
-                       console.log(reason);
-                     });
+                    console.log("The result is " + result);
+                    var url = result;
+                    var status ;
+                    status = rp(url+"/health").then(function (result){
+                      console.log("The fetch result " + JSON.stringify(result));
+                      return result;
+                    }).catch (function (reason) {
+                      console.log(reason);
+                    });
+                    res.json({app: summary, address: url, status: status})
                     //res.render('apps/app.jade', {pageData: {username: username, app: summary, address: result}});
-                }).then (function (result){
-                    console.log("The returnResult is " + JSON.stringify(returnResult));
-                    res.json(returnResult);
                 }).catch(function (reason) {
                     console.log(reason);
                     res.render('global/globalError', {pageData: {error: reason, back:back}});
